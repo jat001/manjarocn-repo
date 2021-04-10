@@ -1,11 +1,3 @@
-qv2ray
-qv2ray-dev-git
-qv2ray-plugin-command
-qv2ray-plugin-command-dev-git
-qv2ray-plugin-naiveproxy-dev-git
-qv2ray-plugin-naiveproxy-git
-qv2ray-plugin-ssr-dev-git
-qv2ray-plugin-trojan
-qv2ray-plugin-trojan-dev-git
-qv2ray-plugin-trojan-go-dev-git
-qv2ray-plugin-trojan-go-git
+1password
+fcitx5*
+qv2ray*

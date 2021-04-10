@@ -1,10 +1,10 @@
-# repo
+# manjarocn/repo
 
 基于 [archlinuxcn/repo](https://github.com/archlinuxcn/repo) 和 [manjarocn/docker](https://github.com/manjarocn/docker) 的自动化构建
 
 ```
 [manjarocn]
-Server = https://repo.manjarocn.org/x86_64
+Server = https://repo.manjarocn.org/stable/x86_64
 
 sudo pacman-key --recv-keys 974B3711CFB9BF2D && sudo pacman-key --lsign-key 974B3711CFB9BF2D
 ```
