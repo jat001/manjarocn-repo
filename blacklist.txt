@@ -1,1 +1,3 @@
+fcitx5-chinese-addons-git
+fcitx5-gtk-git
 fcitx5-pinyin-zhwiki

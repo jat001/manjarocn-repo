@@ -9,9 +9,13 @@ from datetime import datetime
 
 
 def prin(*args, pkg=None, error=False, **kwargs):
-    print(datetime.now(), ':point_right: ManjaroCN --->', *args,
-          '%s --->' % pkg if pkg is not None else '',
-          file=sys.stderr if error else sys.stdout, **kwargs)
+    print(
+        datetime.now(),
+        ':point_right: ManjaroCN --->',
+        '%s --->' % pkg if pkg is not None else '',
+        *args,
+        file=sys.stderr if error else sys.stdout, **kwargs,
+    )
 
 
 def parse_env():
@@ -49,12 +53,12 @@ def build(pkg, env, blacklist, errors, depends_tree=None):
     pkgbuild = env['paths']['ARCHCN'][0] / pkg / 'PKGBUILD'
     if not pkgbuild.is_file():
         errors.append([pkg, 'PKGBUILD not found'])
-        prin('build failed: PKGBUILD not found', pkg=pkg, error=True)
+        prin('skip build: PKGBUILD not found', pkg=pkg, error=True)
         return False
 
     if pkg in blacklist:
         errors.append([pkg, 'package in blacklist'])
-        prin('build failed: package in blacklist', pkg=pkg, error=True)
+        prin('skip build: package in blacklist', pkg=pkg, error=True)
         return False
 
     if depends_tree is None:
@@ -63,7 +67,7 @@ def build(pkg, env, blacklist, errors, depends_tree=None):
     prin('depends tree:', depends_tree, pkg=pkg)
     if len(depends_tree) > 10:
         errors.append([pkg, 'depends too deep'])
-        prin('build failed: depends too deep', pkg=pkg, error=True)
+        prin('skip build: depends too deep', pkg=pkg, error=True)
         return False
 
     depends = subprocess.run([
