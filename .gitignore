@@ -6,4 +6,5 @@
 !/README.md
 !/gpg.asc.enc
 !/list.txt
+!/blacklist.txt
 !/run.py
