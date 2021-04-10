@@ -7,8 +7,9 @@ import subprocess
 from pathlib import Path
 
 
-def prin(*args, error=False, **kwargs):
+def prin(*args, pkg=None, error=False, **kwargs):
     print(':point_right: ManjaroCN --->', *args,
+          '%s --->' % pkg if pkg is not None else '',
           file=sys.stderr if error else sys.stdout, **kwargs)
 
 
@@ -43,15 +44,19 @@ def parse_env():
     }
 
 
-def build(pkg, env, errors, depth=0):
+def build(pkg, env, errors, depends_tree=None):
     pkgbuild = env['paths']['ARCHCN'][0] / pkg / 'PKGBUILD'
     if not pkgbuild.is_file():
         errors.append([pkg, 'PKGBUILD not found'])
         return False
 
-    if depth > 10:
+    if depends_tree is None:
+        depends_tree = []
+    depends_tree.append(pkg)
+    prin('depends tree:', depends_tree, pkg=pkg)
+    if len(depends_tree) > 10:
         errors.append([pkg, 'depends too deep'])
-        prin('Build %s failed:' % pkg, 'depends too deep', error=True)
+        prin('build failed: depends too deep', pkg=pkg, error=True)
         return False
 
     depends = subprocess.run([
@@ -61,10 +66,10 @@ def build(pkg, env, errors, depth=0):
     depends = [re.split('>|=|<', i)[0] for i in depends.stdout.decode('utf8').split()]
     depends = [i for i in depends if (env['paths']['ARCHCN'][0] / i).is_dir()]
     if depends:
-        prin('Found depends:', depends)
+        prin('found depends:', depends, pkg=pkg)
         for i in depends:
-            if not build(i, env, errors, depth + 1):
-                prin('Build a depend %s of %s failed:' % (i, pkg), error=True)
+            if not build(i, env, errors, depends_tree):
+                prin('build depend %s failed:' % i, pkg=pkg, error=True)
                 return False
 
     cmd = ['docker', 'run', '--rm', '-e', 'MAKEFLAGS=' + env['makeflags']]
@@ -75,13 +80,13 @@ def build(pkg, env, errors, depth=0):
             'rw' if k != 'GPGDIR' else 'ro',
         )])
     cmd.append(env['image'])
-    prin('Building %s:' % pkg, cmd)
+    prin('building:', cmd, pkg=pkg)
 
     try:
         subprocess.run(cmd, check=True)
     except subprocess.CalledProcessError as e:
         errors.append([pkg, e])
-        prin('Build %s failed:' % pkg, e, error=True)
+        prin('build failed:', e, pkg=pkg, error=True)
         return False
 
     return True
