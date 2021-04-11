@@ -19,6 +19,12 @@ Import GPG keys:
 sudo pacman-key --recv-keys 974B3711CFB9BF2D && sudo pacman-key --lsign-key 974B3711CFB9BF2D
 ```
 
-## Package List
+## Packages List
 
 See [/gh-pages/stable/x86_64](https://github.com/manjarocn/repo/tree/gh-pages/stable/x86_64)
+
+## Telegram
+
+[News Channel](https://t.me/manjarocn_news)
+
+[Discussion Group](https://t.me/manjarocn_group)
