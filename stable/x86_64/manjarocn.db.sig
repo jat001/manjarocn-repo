@@ -1,1 +1,0 @@
-manjarocn.db.tar.xz.sig

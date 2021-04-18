@@ -1,1 +1,0 @@
-manjarocn.files.tar.xz.sig
