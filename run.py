@@ -22,7 +22,6 @@ def main():
 
     if Errors.errors:
         Errors.print()
-        sys.exit(1)
 
 
 if __name__ == '__main__':
