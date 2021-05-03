@@ -66,7 +66,10 @@ class Builder:
         if depends:
             self.print_log('found depends:', depends)
             for i in depends:
-                Builder(i, self.depends_tree).build()
+                try:
+                    Builder(i, self.depends_tree).build()
+                except (PackageInLargeList, PackageUpToDate):
+                    pass
 
     def build(self):
         self.build_depends()
