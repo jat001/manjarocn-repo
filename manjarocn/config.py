@@ -12,23 +12,26 @@ def parse_env():
         'SHELL': '/bin/bash',
         'BRANCH': 'stable',
         'ARCH': 'x86_64',
-        'IMAGE': 'manjarocn/base:%s-latest',
+        'IMAGE': 'manjarocn/base:{branch}-latest',
         'MAKEFLAGS': '-j%d' % (os.cpu_count() + 1),
+        'PROXY': None,
     }
-    _env['IMAGE'] = _env['IMAGE'] % _env['BRANCH']
     _env = {k: os.environ.get(k, v) for k, v in _env.items()}
+    _env['IMAGE'] = _env['IMAGE'].format(branch=_env['BRANCH'], arch=_env['ARCH'])
 
     paths = {
         'ARCHCN': ['../archlinuxcn_repo/archlinuxcn', '/build/workspace'],
         'GPGDIR': ['~/.gnupg', '/gpg'],
-        'PKGCACHE': ['../pkgcache', '/pkgcache'],
         'PKGDEST': ['../build/packages', '/build/packages'],
         'SRCDEST': ['../build/sources', '/build/sources'],
         'SRCPKGDEST': ['../build/srcpackages', '/build/srcpackages'],
+        'PACMANDB': ['../pacmandb/{branch}/{arch}', '/var/lib/pacman/sync'],
+        'PKGCACHE': ['../pkgcache/{branch}/{arch}', '/var/cache/pacman/pkg'],
     }
     _env['PATHS'] = {}
     for name, (target, link) in paths.items():
         target = os.environ.get(name, target)
+        target = target.format(branch=_env['BRANCH'], arch=_env['ARCH'])
         target = root / target if target.startswith('.') else Path(target)
         target = target.expanduser().resolve()
         if not target.is_dir():

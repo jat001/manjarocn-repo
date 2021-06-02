@@ -73,9 +73,15 @@ class Builder:
 
     def build(self):
         self.build_depends()
-
         self.print_log('package version:', self.pkgver)
-        cmd = ['docker', 'run', '--rm', '-e', 'MAKEFLAGS=' + env['MAKEFLAGS']]
+
+        cmd = [
+            'docker', 'run', '--rm',
+            '-e', 'BRANCH=' + env['BRANCH'],
+            '-e', 'MAKEFLAGS=' + env['MAKEFLAGS'],
+        ]
+        if env['PROXY']:
+            cmd.extend(['-e', 'ALL_PROXY=' + env['PROXY']])
         for name, (target, link) in env['PATHS'].items():
             if name == 'ARCHCN':
                 target /= self.pkg
@@ -87,6 +93,8 @@ class Builder:
                 mode,
             )])
         cmd.append(env['IMAGE'])
+        if env['PROXY']:
+            cmd.extend(['bash', '-c', 'sudo -u builder git config --global http.proxy %s; /makepackage.sh' % env['PROXY']])
         self.print_log('build command:', cmd)
 
         try:
